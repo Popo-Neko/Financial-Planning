@@ -6,3 +6,6 @@ class Retirement:
     def __str__(self):
         return 'Retirement: %s' % (self.age)
     
+    # describe all attributes
+    def describe(self):
+        print('Retirement age: %s' % self.age)

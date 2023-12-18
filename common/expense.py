@@ -10,3 +10,9 @@ class expense:
     
     def __str__(self):
         return 'Monthly_expense: %s' % (self.monthly_expense)
+
+    # describe all attributes
+    def describe(self):
+        print('Monthly_expense: %s' % (self.monthly_expense))
+        print('Rent: %s' % (self.rent))
+        print('Contingency_expense: %s' % (self.contingency_expense))

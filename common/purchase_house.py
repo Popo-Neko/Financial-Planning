@@ -33,3 +33,17 @@ class Purchase_house:
         
     def __str__(self):
         return 'Purchase_house: %s' % (self.age)
+    
+    # describe all attributes
+    def describe(self):
+        print('Purchase house age: %s' % self.age)
+        print('Location: %s' % self.location)
+        print('Area: %s' % self.area)
+        print('Price: %s' % self.price)
+        print('Down payment ratio: %s' % self.down_payment)
+        print('Loan: %s' % self.loan)
+        print('Interest rate: %s' % self.interest_rate)
+        print('Renovation: %s' % self.renovation)
+        print('Furniture: %s' % self.furniture)
+        print('Appliances: %s' % self.appliances)
+        print('Monthly mortgage: %s' % self.monthly_mortgage)

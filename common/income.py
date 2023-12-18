@@ -30,3 +30,11 @@ class income:
     
     def __str__(self):
         return 'Salary: %s' % (self.salary)
+    
+    # describe all attributes
+    def describe(self):
+        print('Salary: %s' % (self.salary))
+        print('Increase_rate: %s' % (self.increase_rate))
+        print('MPF_rate: %s' % (self.MPF_rate))
+        print('Annual_tax: %s' % (self.annual_tax))
+        print('Increase_stop_age: %s' % (self.increase_stop_age))

@@ -4,7 +4,7 @@ from common.death import Death
 from common.marriage import Marriage
 from common.purchase_house import Purchase_house
 from common.retirement import Retirement
-from common.income import income
+from common.income import income, tax
 from common.expense import expense
 from common.life_events import life_events
 from func import MPF
@@ -31,7 +31,9 @@ class person:
         cash_flow['childbearing'] = self.childbearing()
         cash_flow['retirement'] = self.retirement()
         cash_flow['monthly_income'] = self.income()
+        cash_flow['annual_income'] = cash_flow['monthly_income']*12
         cash_flow['monthly_expense'] = self.expense()
+        cash_flow['annual_expense'] = cash_flow['monthly_expense']*12
         cash_flow['year_balance'] = -cash_flow['marriage'] -cash_flow['purchase_house'] -cash_flow['childbearing'] +cash_flow['retirement'] + 12*cash_flow['monthly_income'] -12*cash_flow['monthly_expense']
         cash_flow['accumulated_balance'] = cash_flow['year_balance'].cumsum()
         self.cash_flow = cash_flow
@@ -41,6 +43,7 @@ class person:
         for i in cash_flow_table.columns:
             if i != 'age':
                 cash_flow_table[i] = cash_flow_table[i].round(2).apply(lambda x: '{:,.2f}'.format(x))
+        cash_flow_table.drop(['annual_income', 'annual_expense'], axis=1, inplace=True)
         self.cash_flow_table = cash_flow_table
         
     def get_married(self):
@@ -80,7 +83,7 @@ class person:
     def income(self):
         data = [0 for i in range(self.life_time)]
         for i in range(0, self.life_events.retirement.age-self.age+1):
-            data[i] = self.incomes.salary
+            data[i] = self.incomes.salary - tax(self.incomes.salary * 12)/12
             if i < self.incomes.increase_stop_age - self.age:
                 self.incomes.salary = self.incomes.salary * (1 + self.incomes.increase_rate)
         return pd.Series(data, index=range(self.age, self.life_events.death.age+1))
@@ -93,6 +96,8 @@ class person:
             else:
                 data[i] = self.expenses.monthly_expense + self.expenses.contingency_expense
         return pd.Series(data, index=range(self.age, self.life_events.death.age+1))
+    
+    # describe life cycle
         
 
     

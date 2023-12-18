@@ -22,3 +22,16 @@ class Childbearing:
     
     def __str__(self):
         return 'Childbearing: %s' % (self.age)
+    
+    # output all parameters with description
+    def describe(self):
+        print(f'Age of childbearing: {self.age}')
+        print(f'Expense of preparation: {self.preparation}')
+        print(f'Expense of birth: {self.birth}')
+        print(f'Expense of postpartum recovery: {self.postpartum_recovery}')
+        print(f'Expense of kindergarden: {self.kindergarden}')
+        print(f'Expense of primary school: {self.primary_school}')
+        print(f'Expense of middle school: {self.middle_school}')
+        print(f'Expense of high school: {self.high_school}')
+        print(f'Expense of college: {self.college}')
+    

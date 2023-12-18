@@ -29,3 +29,16 @@ class Marriage:
 
     def __getitem__(self, key):
         return getattr(self, key)
+    
+    # describe all attributes   
+    def describe(self):
+        print('Marriage age: %s' % self.age)
+        print('Location: %s' % self.location)
+        print('Number of tables: %s' % self.tables)
+        print('Unit price of table: %s' % self.unit_price)
+        print('Ceremony: %s' % self.ceremony)
+        print('Accommodation: %s' % self.accommodation)
+        print('Wine: %s' % self.wine)
+        print('Honeymoon: %s' % self.honeymoon)
+        print('Jewelry: %s' % self.jewelry)
+        print('Total: %s' % self.sum)
