@@ -2,17 +2,28 @@ import pandas as pd
 
 # life cycle of a person
 class person:
-    def __init__(self, name, age, life_events, income):
+    def __init__(self, name, age, life_events, income, expense):
         self.name = name
         self.age = age
         self.life_events = life_events
-        self.income = income
+        self.incomes = income
+        self.expenses = expense
         print(f'{self.name} is {self.age} now.')
         # calculate life time
-        self.life_time = self.life_events.death - self.age
+        self.life_time = self.life_events.death.age - self.age + 1
         cash_flow = pd.DataFrame(columns=['age', 'marriage', 'purchase_house', 'childbearing', 'retirement', 'income', 
                                         'expense','year_balance'], 
                                         index=range(self.age, self.life_events.death.age+1))
+        # create life time cash flow df
+        cash_flow['age'] = cash_flow.index
+        cash_flow['marriage'] = self.get_married()
+        cash_flow['purchase_house'] = self.purchase_house()
+        cash_flow['childbearing'] = self.childbearing()
+        cash_flow['retirement'] = self.retirement()
+        cash_flow['income'] = self.income()
+        cash_flow['expense'] = self.expense()
+        cash_flow['year_balance'] = cash_flow['marriage'] + cash_flow['purchase_house'] + cash_flow['childbearing'] + cash_flow['retirement'] + cash_flow['income'] + cash_flow['expense']
+        self.cash_flow = cash_flow
         
     def get_married(self):
         data = [0 for i in range(self.life_time)]
@@ -42,6 +53,7 @@ class person:
             data[i] = -self.life_events.childbearing.college
         return pd.Series(data, index=range(self.age, self.life_events.death.age+1))
     
+    @staticmethod
     def MPF(monthly_salary, increase_rate, start_age, end_age, stop_age, MPF_return_rate):
         factor = 1 + MPF_return_rate/12
         MPF_total = 0
@@ -56,7 +68,7 @@ class person:
     
     def retirement(self):
         data = [0 for i in range(self.life_time)]
-        mpf = self.MPF(self.income.salary, self.income.increase_rate, self.age, self.life_events.retirement.age, self.income.increase_stop_age, self.income.MPF_rate)
+        mpf = self.MPF(self.incomes.salary, self.incomes.increase_rate, self.age, self.life_events.retirement.age, self.incomes.increase_stop_age, self.incomes.MPF_rate)
         for i in range(self.age, self.life_events.retirement.age):
             data[i] = mpf
         return pd.Series(data, index=range(self.age, self.life_events.death.age+1))
@@ -64,17 +76,18 @@ class person:
     def income(self):
         data = [0 for i in range(self.life_time)]
         for i in range(self.age, self.life_events.retirement.age+1):
-            data[i] = self.income.salary
+            data[i] = self.incomes.salary
             if i < self.life_events.retirement.age:
-                self.income.salary = self.income.salary * (1 + self.income.increase_rate)
+                self.incomes.salary = self.incomes.salary * (1 + self.incomes.increase_rate)
         return pd.Series(data, index=range(self.age, self.life_events.death.age+1))
     
     def expense(self):
         data = [0 for i in range(self.life_time)]
         for i in range(self.age, self.life_events.retirement.age+1):
-            data[i] = self.expense.monthly_expense
-            if i < self.life_events.retirement.age:
-                self.income.salary = self.income.salary * (1 + self.income.increase_rate)
+            if i < self.life_events.purchase_house.age:
+                data[i] = self.expenses.monthly_expense + self.expenses.rent + self.expenses.contingency_expense
+            else:
+                data[i] = self.expenses.monthly_expense + self.expenses.contingency_expense
         return pd.Series(data, index=range(self.age, self.life_events.death.age+1))
 
 # life events of a person
@@ -227,7 +240,7 @@ def tax(annual_income):
         
 
 class income:
-    def __init__(self, salary, increase_rate, MPF_rate):
+    def __init__(self, salary, increase_rate, MPF_rate, stop_age):
         # salary
         self.salary = salary
         # wage increase rate
@@ -237,7 +250,7 @@ class income:
         # tax 
         self.annual_tax = tax(salary * 12)
         # increase stop age
-        self.increase_stop_age = 35
+        self.increase_stop_age = stop_age
     
     def __str__(self):
         return 'Salary: %s' % (self.salary)
@@ -262,5 +275,8 @@ if __name__ == '__main__':
     Retirement_1 = Retirement(60)
     Death_1 = Death(85)
     life_events_1 = life_events(Marriage_1, Purchase_house_1, Childbearing_1, Retirement_1, Death_1)
-    print(life_events_1['marriage'])
-    print(str(life_events_1))
+    income_1 = income(20000, 0.05, 0.05, 35)
+    expense_1 = expense(10000, 5000, 100000)
+    person_1 = person('Jack', 20, life_events_1, income_1, expense_1)
+    print(person_1.cash_flow)
+    
