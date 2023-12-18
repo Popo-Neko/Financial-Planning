@@ -93,7 +93,7 @@ class person:
             else:
                 data[i] = self.expenses.monthly_expense + self.expenses.contingency_expense
         return pd.Series(data, index=range(self.age, self.life_events.death.age+1))
-    
+        
 
     
 if __name__ == '__main__':
