@@ -1,4 +1,4 @@
-from func import mortgage
+from tool4cal import mortgage
 
 
 # purchase house class

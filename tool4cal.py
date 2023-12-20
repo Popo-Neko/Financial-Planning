@@ -4,12 +4,26 @@ funcs for calculating
 
 def mortgage(loan, ir, n):
     '''
+    cal a monthly payment mortgage with an identical amout for each month
     loan: loan amount = house price * (1 - down payment ratio)
     ir: annual interest rate for mortgage
     n: number of years for mortgage
     '''
     ir = ir / 12
     return loan * (ir*(1+ir)**(n*12)) / ((1+ir)**(n*12)-1)
+
+
+# cal the present value of an annuity
+def annuity(pmt, ir, n):
+    '''
+    cal the present value of an annuity
+    pmt: payment for each period
+    ir: annual interest rate
+    n: number of periods
+    '''
+    ir = ir / 12
+    return pmt * ((1 - (1+ir)**(-n*12)) / ir)
+    
 
 def MPF(monthly_salary, increase_rate, start_age, end_age, stop_age, MPF_return_rate):
     '''
